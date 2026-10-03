@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>역량 진단 샘플</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --bg:#F3F6F5;
+    --surface:#FFFFFF;
+    --sunken:#E8EEEC;
+    --ink:#17262A;
+    --ink-soft:#4B5D61;
+    --ink-faint:#7D8D90;
+    --line:#D5DFDD;
+    --line-strong:#B6C6C3;
+    --accent:#0E6A68;
+    --accent-ink:#FFFFFF;
+    --accent-tint:#DCEEEC;
+    --omr:#C8435A;
+    --omr-tint:#F9E3E7;
+    --good:#21794F; --good-tint:#DFF2E8;
+    --mid:#8A6512;  --mid-tint:#F6EDD5;
+    --low:#B23A48;  --low-tint:#F8E1E4;
+    --shadow:0 1px 2px rgba(23,38,42,.05),0 6px 18px rgba(23,38,42,.07);
+    --font-body:'IBM Plex Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+    --font-mono:'IBM Plex Mono',ui-monospace,'SFMono-Regular',monospace;
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0F1719; --surface:#162124; --sunken:#0B1214;
+      --ink:#E5EEEC; --ink-soft:#A9BBB8; --ink-faint:#748886;
+      --line:#26363A; --line-strong:#384D51;
+      --accent:#4FB8B2; --accent-ink:#0B1214; --accent-tint:#173436;
+      --omr:#EE7D90; --omr-tint:#3A1D24;
+      --good:#5CC891; --good-tint:#16301F;
+      --mid:#E0B455; --mid-tint:#33290F;
+      --low:#EE7D8A; --low-tint:#3A1C21;
+      --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.3);
+      color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0F1719; --surface:#162124; --sunken:#0B1214;
+    --ink:#E5EEEC; --ink-soft:#A9BBB8; --ink-faint:#748886;
+    --line:#26363A; --line-strong:#384D51;
+    --accent:#4FB8B2; --accent-ink:#0B1214; --accent-tint:#173436;
+    --omr:#EE7D90; --omr-tint:#3A1D24;
+    --good:#5CC891; --good-tint:#16301F;
+    --mid:#E0B455; --mid-tint:#33290F;
+    --low:#EE7D8A; --low-tint:#3A1C21;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.3);
+    color-scheme:dark;
+  }
+
+  *{box-sizing:border-box}
+  body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:15px;line-height:1.65;margin:0;word-break:keep-all}
+  .wrap{max-width:1040px;margin:0 auto;padding-inline:20px;padding-block:0 64px}
+  h1,h2,h3{text-wrap:balance;line-height:1.3;margin:0}
+  h1{font-size:28px;font-weight:700;letter-spacing:-.01em}
+  h2{font-size:21px;font-weight:700}
+  h3{font-size:16px;font-weight:600}
+  p{margin:0;max-width:68ch}
+  a{color:var(--accent)}
+  .mono{font-family:var(--font-mono)}
+  .eyebrow{font-family:var(--font-mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint)}
+  .muted{color:var(--ink-soft)}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  /* header */
+  header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);border-bottom:1px solid var(--line)}
+  .top-inner{max-width:1040px;margin:0 auto;padding-inline:20px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding-block:12px}
+  .brand{display:flex;align-items:baseline;gap:10px;margin-right:auto}
+  .brand b{font-size:16px}
+  .brand span{font-family:var(--font-mono);font-size:11px;color:var(--omr);border:1px solid var(--omr);border-radius:3px;padding:0 5px;letter-spacing:.06em}
+  nav.tabs{display:flex;gap:4px;overflow-x:auto}
+  nav.tabs button{font:inherit;font-size:14px;background:none;border:0;color:var(--ink-soft);padding:6px 12px;border-radius:6px;cursor:pointer;white-space:nowrap}
+  nav.tabs button:hover{color:var(--ink);background:var(--sunken)}
+  nav.tabs button[aria-selected="true"]{color:var(--accent-ink);background:var(--accent)}
+
+  .hero{display:grid;gap:14px;padding-block:36px 28px}
+  .hero p{color:var(--ink-soft)}
+  .notice{display:flex;gap:12px;align-items:flex-start;background:var(--omr-tint);border:1px solid color-mix(in srgb,var(--omr) 35%,transparent);border-radius:8px;padding:12px 14px;font-size:13.5px;max-width:none}
+  .notice b{color:var(--omr)}
+  section.panel{display:grid;gap:22px}
+  .block{display:grid;gap:12px}
+  .block + .block{margin-top:18px}
+
+  /* tables */
+  .tbl{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+  table{border-collapse:collapse;width:100%;font-size:13.5px}
+  th,td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--line)}
+  th{font-weight:600;background:var(--sunken);color:var(--ink-soft);font-size:12.5px;white-space:nowrap}
+  tr:last-child td{border-bottom:0}
+  td.code{font-family:var(--font-mono);font-weight:600;color:var(--accent);white-space:nowrap}
+  .lv1{color:var(--low)} .lv2{color:var(--mid)} .lv3{color:var(--good)}
+
+  /* competency cards */
+  .comp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+  .comp{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:grid;gap:10px;align-content:start}
+  .comp-head{display:flex;gap:10px;align-items:baseline}
+  .comp-head .mono{color:var(--accent);font-weight:600}
+  .comp dl{margin:0;display:grid;gap:6px;font-size:13px}
+  .comp dt{font-family:var(--font-mono);font-size:11px;color:var(--ink-faint);letter-spacing:.05em}
+  .comp dd{margin:0;color:var(--ink-soft)}
+  .ladder{display:grid;gap:4px;font-size:13px;border-top:1px dashed var(--line);padding-top:10px}
+  .ladder div{display:grid;grid-template-columns:62px 1fr;gap:8px}
+  .ladder span{font-family:var(--font-mono);font-size:11.5px;padding-top:2px}
+
+  /* test */
+  .test-layout{display:grid;grid-template-columns:200px 1fr;gap:24px;align-items:start}
+  @media (max-width:760px){.test-layout{grid-template-columns:1fr}}
+  .sheet{position:sticky;top:calc(env(safe-area-inset-top,0px) + 76px);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;display:grid;gap:10px}
+  @media (max-width:760px){.sheet{position:static}}
+  .sheet-rows{display:grid;gap:6px}
+  .sheet-row{display:grid;grid-template-columns:22px 1fr;align-items:center;gap:6px;font-family:var(--font-mono);font-size:12px;cursor:pointer;background:none;border:0;padding:3px 4px;border-radius:5px;color:var(--ink-soft);text-align:left}
+  .sheet-row:hover{background:var(--sunken)}
+  .sheet-row.cur{background:var(--accent-tint);color:var(--ink)}
+  .bubbles{display:flex;gap:5px}
+  .bub{width:16px;height:20px;border:1.5px solid var(--omr);border-radius:50%;font-size:9px;display:grid;place-items:center;color:var(--omr)}
+  .bub.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+  .sheet-row .txt{font-size:11.5px;color:var(--omr)}
+  .sheet-row .txt.on{color:var(--ink)}
+  .sheet .prog{font-size:12px;color:var(--ink-faint)}
+
+  .q{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:24px;display:grid;gap:18px;box-shadow:var(--shadow)}
+  .q-meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .chip{font-family:var(--font-mono);font-size:11.5px;padding:2px 8px;border-radius:999px;background:var(--accent-tint);color:var(--accent);font-weight:500}
+  .scenario{font-size:16.5px;line-height:1.75;max-width:62ch}
+  .instr{font-size:13px;color:var(--ink-faint)}
+  .opts{display:grid;gap:8px}
+  .opt{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:center;text-align:left;font:inherit;font-size:14.5px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:12px 14px;cursor:pointer}
+  .opt:hover{border-color:var(--line-strong)}
+  .opt .bub{width:26px;height:32px;font-size:13px;font-family:var(--font-mono);font-weight:600}
+  .opt[aria-checked="true"]{border-color:var(--ink);background:var(--surface)}
+  .opt[aria-checked="true"] .bub{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+  .mails{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+  .mail{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-size:14px;display:grid;grid-template-columns:auto 1fr;gap:10px}
+  .mail .from{font-family:var(--font-mono);font-size:12px;color:var(--accent);font-weight:600;padding-top:2px;min-width:60px}
+  label.fl{display:grid;gap:6px;font-size:13px;font-weight:600;color:var(--ink-soft)}
+  textarea{font:inherit;font-size:14px;color:var(--ink);background:var(--bg);border:1px solid var(--line-strong);border-radius:8px;padding:10px 12px;min-height:96px;resize:vertical;width:100%}
+  .q-nav{display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap;align-items:center}
+  .btn{font:inherit;font-size:14px;font-weight:600;border-radius:8px;padding:9px 16px;cursor:pointer;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink)}
+  .btn:hover{border-color:var(--ink-faint)}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+  .btn.ghost{background:none;border-color:transparent;color:var(--ink-soft)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .saved{font-family:var(--font-mono);font-size:11.5px;color:var(--ink-faint)}
+
+  /* report */
+  .report-head{display:flex;gap:16px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap}
+  .sample-flag{font-family:var(--font-mono);font-size:11.5px;background:var(--mid-tint);color:var(--mid);padding:3px 8px;border-radius:4px}
+  .bars{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 20px;display:grid;gap:12px}
+  .bar-row{display:grid;grid-template-columns:150px 1fr 92px;gap:14px;align-items:center;font-size:13.5px}
+  @media (max-width:560px){.bar-row{grid-template-columns:1fr 84px}.bar-row .track{grid-column:1/-1;grid-row:2}}
+  .track{position:relative;height:14px;background:var(--sunken);border-radius:3px}
+  .track::before,.track::after{content:"";position:absolute;top:-3px;bottom:-3px;width:1px;background:var(--line-strong)}
+  .track::before{left:33.33%} .track::after{left:66.67%}
+  .fill{position:absolute;inset:0 auto 0 0;border-radius:3px;background:var(--accent);transition:width .4s ease}
+  @media (prefers-reduced-motion:reduce){.fill{transition:none}}
+  .score{font-family:var(--font-mono);font-variant-numeric:tabular-nums;text-align:right;display:flex;gap:6px;justify-content:flex-end;align-items:center}
+  .pill{font-family:var(--font-body);font-size:11px;font-weight:600;padding:1px 7px;border-radius:999px;white-space:nowrap}
+  .pill.l1{background:var(--low-tint);color:var(--low)}
+  .pill.l2{background:var(--mid-tint);color:var(--mid)}
+  .pill.l3{background:var(--good-tint);color:var(--good)}
+  .pill.na{background:var(--sunken);color:var(--ink-faint)}
+  .axis{display:grid;grid-template-columns:150px 1fr 92px;gap:14px;font-family:var(--font-mono);font-size:10.5px;color:var(--ink-faint)}
+  .axis div{position:relative;height:12px}
+  .axis span{position:absolute;transform:translateX(-50%)}
+  @media (max-width:560px){.axis{display:none}}
+  .detail{display:grid;gap:10px}
+  .det{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;display:grid;gap:10px}
+  .det-head{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .det-head .mono{color:var(--accent);font-weight:600}
+  .indicator{font-size:13.5px;background:var(--bg);border-radius:6px;padding:8px 12px}
+  .evidence{display:grid;gap:6px;font-size:13.5px;margin:0;padding:0;list-style:none}
+  .evidence li{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:baseline;border-top:1px dashed var(--line);padding-top:6px}
+  .evidence .src{font-family:var(--font-mono);font-size:11.5px;color:var(--ink-faint);white-space:nowrap}
+  .evidence .pts{font-family:var(--font-mono);font-size:12px;font-variant-numeric:tabular-nums}
+  .rubric-score{display:flex;gap:4px}
+  .rubric-score button{font-family:var(--font-mono);font-size:12px;width:30px;height:28px;border-radius:5px;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink-soft);cursor:pointer}
+  .rubric-score button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .answer-quote{font-size:13px;white-space:pre-wrap;background:var(--bg);border-left:3px solid var(--line-strong);padding:8px 12px;border-radius:0 6px 6px 0;color:var(--ink-soft);max-height:160px;overflow:auto}
+  .flow{margin:0;padding-left:20px;display:grid;gap:4px;font-size:14px}
+  .checks{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:14px}
+  .checks li{display:flex;gap:8px;align-items:baseline}
+  .checks li::before{content:"";width:12px;height:12px;border:1.5px solid var(--ink-faint);border-radius:3px;flex:none;transform:translateY(1px)}
+  footer{margin-top:48px;font-size:12.5px;color:var(--ink-faint);border-top:1px solid var(--line);padding-top:16px}
+</style>
+<style>[hidden]{display:none!important}img{max-width:100%}</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand"><b>역량 진단 샘플</b><span>DRAFT</span></div>
+    <nav class="tabs" role="tablist" aria-label="섹션">
+      <button role="tab" id="tab-model" data-tab="model">역량 모델</button>
+      <button role="tab" id="tab-test" data-tab="test">검사 응시</button>
+      <button role="tab" id="tab-report" data-tab="report">결과 리포트</button>
+      <button role="tab" id="tab-design" data-tab="design">시스템 설계</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- 역량 모델 -->
+  <section class="panel" id="panel-model" data-panel="model">
+    <div class="hero">
+      <div class="eyebrow">NCS 직업기초능력 × O*NET Skills · Work Styles</div>
+      <h1>NCS·O*NET 기반 역량 모델과 평가 문항</h1>
+      <p>NCS 직업기초능력과 O*NET 스킬·업무스타일을 교차해 6개 핵심 역량을 뽑고, 역량별 행동지표와 샘플 문항을 붙였습니다. 평가 대상은 신입~실무자급 사무직입니다.</p>
+      <p class="notice"><b>초안</b><span>행동지표와 문항은 NCS·O*NET의 공식 문항이 아니라 프로젝트용으로 새로 작성했습니다. 신뢰도·타당도 검증 전이므로 시스템 개발·테스트용으로만 쓰고, 실제 평가에는 에프엔이노에듀 자료로 교체하세요.</span></p>
+    </div>
+
+    <div class="block">
+      <h2>역량 모델 개요</h2>
+      <p class="muted">NCS 10개 직업기초능력 가운데 행동으로 관찰할 수 있고 시나리오 문항으로 측정하기 쉬운 6개를 골랐습니다. 수리·정보·기술·조직이해는 지식형 시험에 가까워 1차 범위에서 뺐습니다.</p>
+      <div class="comp-grid" id="comp-grid"></div>
+      <p class="muted" style="font-size:13px">O*NET 업무스타일(Work Styles) 항목은 최근 개편됐을 수 있으니 명칭을 O*NET Content Model에서 다시 확인해야 합니다.</p>
+    </div>
+
+    <div class="block">
+      <h2>3수준 행동지표</h2>
+      <p class="muted">각 역량을 1 미흡 · 2 기대 충족 · 3 우수로 나눠 관찰 가능한 행동으로 적었습니다. 자동 채점과 리포트의 채점 근거 문장이 모두 이 표에서 나옵니다.</p>
+      <div class="tbl"><table id="ind-table"></table></div>
+    </div>
+
+    <div class="block">
+      <h2>평가 구성</h2>
+      <div class="tbl"><table>
+        <tr><th>유형</th><th>문항 수</th><th>측정 역량</th><th>채점</th></tr>
+        <tr><td>상황판단검사(SJT)</td><td class="mono">6</td><td class="mono">C1~C6 각 1문항</td><td>선택지별 0~3점 자동 채점</td></tr>
+        <tr><td>서술형 인바스켓</td><td class="mono">1</td><td class="mono">C1 · C3 · C4</td><td>루브릭 4요소 × 1~3점, 평가자 또는 LLM 채점 · 권장 20분</td></tr>
+      </table></div>
+      <div><button class="btn primary" data-goto="test">검사 시작하기</button></div>
+    </div>
+  </section>
+
+  <!-- 검사 -->
+  <section class="panel" id="panel-test" data-panel="test" hidden>
+    <div class="hero" style="padding-block:28px 4px">
+      <div class="eyebrow">응시자 화면 · 점수와 채점 근거는 숨김</div>
+      <h1>역량 진단 검사</h1>
+      <p>각 상황에서 가장 적절한 행동 1개를 고르세요. 답안은 고를 때마다 이 브라우저에 저장되어 창을 닫아도 남습니다.</p>
+    </div>
+    <div class="test-layout">
+      <aside class="sheet" aria-label="답안지">
+        <div class="eyebrow">답안지</div>
+        <div class="sheet-rows" id="sheet-rows"></div>
+        <div class="prog" id="sheet-prog"></div>
+        <button class="btn primary" id="btn-submit">제출하고 리포트 보기</button>
+        <button class="btn ghost" id="btn-reset">답안 지우기</button>
+        <p class="saved" id="reset-confirm" hidden></p>
+      </aside>
+      <div id="q-host"></div>
+    </div>
+  </section>
+
+  <!-- 리포트 -->
+  <section class="panel" id="panel-report" data-panel="report" hidden>
+    <div class="hero" style="padding-block:28px 4px">
+      <div class="report-head">
+        <div style="display:grid;gap:8px">
+          <div class="eyebrow">평가자 화면 · 역량별 점수 = 문항 점수 합 ÷ 만점 × 100</div>
+          <h1>역량 진단 리포트</h1>
+        </div>
+        <span class="sample-flag" id="sample-flag" hidden>예시 응답으로 계산한 리포트입니다</span>
+      </div>
+    </div>
+    <div class="bars" id="bars"></div>
+    <div class="block">
+      <h2>역량별 채점 근거</h2>
+      <div class="detail" id="detail"></div>
+    </div>
+    <div class="block" id="inbasket-block">
+      <h2>인바스켓 채점</h2>
+      <p class="muted">평가자가 루브릭을 보고 요소별 점수를 매기면 위 역량 점수에 바로 반영됩니다. 답안이 비었거나 해당 메일을 다루지 않으면 0점입니다.</p>
+      <div class="detail" id="rubric-host"></div>
+    </div>
+  </section>
+
+  <!-- 시스템 설계 -->
+  <section class="panel" id="panel-design" data-panel="design" hidden>
+    <div class="hero" style="padding-block:28px 4px">
+      <div class="eyebrow">개발 메모</div>
+      <h1>시스템 설계</h1>
+      <p>문항을 그대로 DB에 넣을 수 있도록 역량 → 문항 → 선택지 → 응답 구조로 나눕니다.</p>
+    </div>
+    <div class="block">
+      <h2>테이블 구조</h2>
+      <div class="tbl"><table>
+        <tr><th>테이블</th><th>주요 필드</th><th>비고</th></tr>
+        <tr><td class="code">competency</td><td class="mono" style="font-size:12.5px">code(C1~C6), name, definition, ncs_ref, onet_ref, level1~3 행동지표</td><td>리포트의 채점 근거 문장 출처</td></tr>
+        <tr><td class="code">item</td><td class="mono" style="font-size:12.5px">id, competency_code, type(SJT/서술형), scenario, rubric</td><td>고객사·직급 태그를 두면 문항 은행으로 확장 가능</td></tr>
+        <tr><td class="code">option</td><td class="mono" style="font-size:12.5px">item_id, label(A~D), text, score(0~3), rationale</td><td>score·rationale은 응시자 API 응답에서 제외</td></tr>
+        <tr><td class="code">response</td><td class="mono" style="font-size:12.5px">attempt_id, item_id, selected_option 또는 answer_text, saved_at</td><td>문항마다 즉시 저장해 창을 닫아도 답안 유지</td></tr>
+        <tr><td class="code">score</td><td class="mono" style="font-size:12.5px">attempt_id, item_id, score, evidence</td><td>SJT는 option에서 복사, 서술형은 LLM 결과와 인용문 저장</td></tr>
+      </table></div>
+    </div>
+    <div class="block">
+      <h2>채점과 리포트 흐름</h2>
+      <ol class="flow">
+        <li>응시자가 제출하면 SJT는 선택지 점수를 즉시 기록한다.</li>
+        <li>서술형은 루브릭을 포함한 프롬프트로 채점하고 점수와 인용문을 저장한다. LLM에는 점수의 근거가 된 답안 문장을 그대로 인용하도록 요구한다.</li>
+        <li>역량별 점수 = 해당 역량 문항 점수 합 ÷ 만점 × 100으로 환산한다.</li>
+        <li>리포트에 역량별 점수, 해당 수준의 행동지표, 문항별 채점 근거를 함께 출력한다.</li>
+      </ol>
+    </div>
+    <div class="block">
+      <h2>출처와 확인할 것</h2>
+      <p class="muted">아래 링크는 웹 검색 없이 기억에 의존해 적었으므로, 하위능력명과 O*NET 요소명을 각 사이트에서 대조해야 합니다.</p>
+      <ul class="flow" style="list-style:disc">
+        <li><a href="https://www.ncs.go.kr" target="_blank" rel="noopener">NCS 국가직무능력표준</a>: 직업기초능력 10개 영역과 하위능력, 학습모듈의 평가 예시</li>
+        <li><a href="https://www.onetonline.org" target="_blank" rel="noopener">O*NET OnLine</a>: Skills·Work Styles 정의와 직무별 중요도</li>
+        <li><a href="https://www.opm.gov/policy-data-oversight/assessment-and-selection/" target="_blank" rel="noopener">미국 OPM 평가·선발 가이드</a>: 상황판단검사·구조화 평가 설계 방법</li>
+      </ul>
+      <ul class="checks">
+        <li>NCS 하위능력 명칭이 현재 버전과 일치하는지 확인</li>
+        <li>O*NET Work Styles 항목명 변경 여부 확인</li>
+        <li>에프엔이노에듀 역량 모델과 비교해 빠진 역량 확인</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>NCS·O*NET 기반 역량 모델 및 평가 문항 샘플 (초안) · 2026-10-03 · 시스템 개발·테스트용 데이터</footer>
+</main>
+
+<script>
+const COMPETENCIES = [
+  {code:'C1',name:'의사소통',ncs:'의사소통능력 (문서이해, 문서작성, 경청, 의사표현)',onet:'Skills: Active Listening, Speaking, Writing, Reading Comprehension',
+   def:'상대의 말과 문서를 정확히 이해하고, 자기 의견을 목적에 맞게 전달한다',
+   lv:['요청을 확인 없이 자기 방식대로 해석한다. 핵심이 뒤에 묻힌다','요청 사항을 되물어 확인한다. 결론을 먼저 말한다','상대의 상황과 수준에 맞춰 전달 방식을 바꾼다. 오해 가능성을 미리 막는다']},
+  {code:'C2',name:'문제해결',ncs:'문제해결능력 (사고력, 문제처리능력)',onet:'Skills: Complex Problem Solving, Critical Thinking, Judgment and Decision Making',
+   def:'문제의 원인을 파악하고 대안을 비교해 실행 가능한 해결책을 선택한다',
+   lv:['눈에 보이는 증상만 처리한다','원인을 확인하고 대안을 2개 이상 비교한다','재발 방지책까지 제시하고 영향받는 이해관계자를 고려한다']},
+  {code:'C3',name:'협업·갈등관리',ncs:'대인관계능력 (팀워크, 갈등관리, 협상)',onet:'Skills: Coordination, Social Perceptiveness, Negotiation / Work Styles: Cooperation',
+   def:'팀 목표를 위해 역할을 조율하고, 의견 충돌을 건설적으로 해결한다',
+   lv:['갈등을 피하거나 상대를 탓한다','양쪽 입장을 듣고 공통 목표를 기준으로 조율한다','갈등을 팀 방식 개선의 계기로 삼는다']},
+  {code:'C4',name:'자원·우선순위 관리',ncs:'자원관리능력 (시간관리, 인적자원관리)',onet:'Skills: Time Management, Management of Personnel Resources',
+   def:'시간과 인력을 중요도·긴급도에 따라 배분한다',
+   lv:['들어온 순서대로 처리한다','중요도·긴급도로 순서를 정하고 못 하는 일을 미리 알린다','위임·조정까지 활용해 전체 마감을 지킨다']},
+  {code:'C5',name:'자기개발',ncs:'자기개발능력 (자아인식, 자기관리, 경력개발)',onet:'Skills: Active Learning, Learning Strategies / Work Styles: Adaptability/Flexibility',
+   def:'자신의 강점·약점을 인식하고 필요한 역량을 스스로 키운다',
+   lv:['피드백을 방어하거나 무시한다','피드백을 받아들이고 구체적인 개선 행동을 정한다','스스로 피드백을 구하고 학습 결과를 팀과 나눈다']},
+  {code:'C6',name:'직업윤리',ncs:'직업윤리 (근로윤리, 공동체윤리)',onet:'Work Styles: Integrity, Dependability',
+   def:'규칙과 약속을 지키고, 불리해도 정직하게 행동한다',
+   lv:['실수나 문제를 숨기거나 넘긴다','문제를 인지하면 정해진 절차대로 보고한다','보고와 함께 재발 방지책을 제안한다']},
+];
+const LV_NAME = ['미흡','기대 충족','우수'];
+
+const SJT = [
+  {id:'Q1',comp:'C1',scenario:'팀장이 "다음 주 회의 자료 간단히 정리해 줘"라고만 말하고 외근을 나갔다. 어떤 회의인지, 분량과 마감은 듣지 못했다.',
+   opts:[['A','지난 회의 자료 형식을 참고해 초안을 만들고, 팀장 복귀 후 방향을 확인받는다',2,'기존 자료로 맥락을 찾고 검토 절차를 두지만, 확인이 늦다'],
+         ['B','"간단히"라고 했으니 핵심만 한 페이지로 만들어 제출한다',0,'확인 없이 자기 방식대로 해석했다'],
+         ['C','동료에게 팀장이 원하는 것을 물어보고 그대로 만든다',1,'요청자가 아닌 사람의 추측에 의존했다'],
+         ['D','팀장에게 메신저로 회의 목적, 분량, 마감을 짧게 확인한 뒤 작성한다',3,'요청자에게 직접, 상대 부담이 적은 방식으로 되물어 확인했다']]},
+  {id:'Q2',comp:'C2',scenario:'최근 2주간 고객 문의 평균 응대 시간이 크게 늘었다는 지표가 나왔다. 당신은 담당 실무자다.',
+   opts:[['A','지난달 비슷한 상황에서 썼던 방법을 그대로 적용한다',1,'원인을 확인하지 않고 이전 해법을 반복했다'],
+         ['B','문의 유형별 건수와 처리 시간을 나눠 원인을 찾고, 해결안 2~3개를 비교해 보고한다',2,'원인 확인과 대안 비교를 했다'],
+         ['C','팀원들에게 더 빨리 응대하라고 공지한다',0,'눈에 보이는 증상만 다뤘다'],
+         ['D','B처럼 원인을 분석·비교하고, 반복 문의는 FAQ로 만들어 관련 부서와 공유한다',3,'재발 방지책과 이해관계자까지 고려했다']]},
+  {id:'Q3',comp:'C3',scenario:'같은 프로젝트의 동료 두 명이 일정 운영 방식을 두고 매 회의마다 부딪혀 분위기가 나빠졌다. 마감은 3주 남았다.',
+   opts:[['A','더 논리적이라고 생각하는 쪽 의견에 힘을 실어 빨리 결론을 낸다',0,'한쪽 편을 들어 갈등을 키울 수 있다'],
+         ['B','두 사람의 입장을 각각 듣고, 마감을 기준으로 절충안을 제안한 뒤 앞으로 일정을 정하는 규칙도 함께 정하자고 한다',3,'갈등을 팀 방식 개선의 계기로 삼았다'],
+         ['C','내 일이 아니므로 관여하지 않고 내 업무에 집중한다',1,'갈등을 피했다'],
+         ['D','회의에서 두 사람의 의견을 정리하고 마감을 기준으로 절충안을 제안한다',2,'양쪽 입장과 공통 목표를 기준으로 조율했다']]},
+  {id:'Q4',comp:'C4',scenario:'오늘 안에 끝낼 수 있는 일은 2건뿐인데 요청은 3건이다. 팀장의 보고서(내일 오전 임원 보고), 고객 답변 메일(오늘 중 회신 약속), 동료의 데이터 정리(금요일 필요, 가장 먼저 요청됨)다.',
+   opts:[['A','먼저 요청받은 데이터 정리부터 순서대로 처리한다',1,'들어온 순서대로 처리했다'],
+         ['B','보고서와 고객 메일을 먼저 처리하고, 데이터 정리는 내일 하겠다고 동료에게 미리 알린다',2,'중요도·긴급도로 순서를 정하고 미리 알렸다'],
+         ['C','누구에게도 알리지 않고 가능한 만큼 처리한다',0,'순서도 정하지 않고 공유도 하지 않았다'],
+         ['D','보고서와 고객 메일을 먼저 처리하고, 동료와 데이터 정리의 범위·일정을 협의해 금요일 전에 여유 있게 맞춘다',3,'조정까지 활용해 전체 마감을 지켰다']]},
+  {id:'Q5',comp:'C5',scenario:'분기 면담에서 팀장이 "보고서가 길고 핵심이 잘 안 보인다"는 피드백을 주었다.',
+   opts:[['A','구체적인 예시를 물어보고 개선 방법을 정한 뒤, 다음 보고서 제출 전에 짧은 검토를 요청한다',3,'스스로 피드백을 구하는 루틴을 만들었다'],
+         ['B','자세히 써야 오해가 없다고 설명하고 현재 방식을 유지한다',0,'피드백을 방어했다'],
+         ['C','다음 보고서부터 첫 장에 요약을 넣기로 정한다',2,'피드백을 받아들이고 구체적 개선 행동을 정했다'],
+         ['D','알겠다고 답하고 특별히 바꾸지는 않는다',1,'피드백을 사실상 무시했다']]},
+  {id:'Q6',comp:'C6',scenario:'지난주 임원에게 제출된 월간 실적 보고서에서 내가 입력한 수치 오류를 발견했다. 실적이 실제보다 좋게 보이고, 아직 아무도 모른다.',
+   opts:[['A','다음 달 보고서에서 조용히 수치를 맞춘다',1,'문제를 인지했지만 숨기는 방식으로 처리했다'],
+         ['B','팀장에게 보고하고 정정본을 제출한다',2,'정해진 절차대로 보고했다'],
+         ['C','팀장에게 즉시 보고하고 정정본을 제출한 뒤, 수치 검증 단계를 추가하자고 제안한다',3,'보고와 함께 재발 방지책을 제안했다'],
+         ['D','영향이 크지 않다고 보고 그대로 둔다',0,'문제를 넘겼다']]},
+];
+
+const INBASKET = {
+  id:'Q7',
+  situation:'당신은 영업지원팀 3년 차 사원이다. 월요일 오전 9시, 아래 메일 3통이 와 있다. 오전 중 처리할 수 있는 시간은 2시간이다.',
+  mails:[['팀장','"오늘 오후 2시 임원 회의에 쓸 고객 이탈 현황 요약을 12시까지 부탁해요."'],
+         ['고객사','"지난주 받기로 한 교육 일정표를 아직 못 받았습니다. 오늘 내부 보고가 있어 급합니다."'],
+         ['동료','"당신이 판단한 할인율 때문에 내 고객이 항의했어요. 왜 그렇게 한 건지 설명해 주세요."']],
+  fields:[['order','① 처리 순서와 이유'],['r_lead','② 팀장에게 보낼 답장'],['r_client','② 고객사에 보낼 답장'],['r_peer','② 동료에게 보낼 답장']],
+  rubric:[
+    {key:'order',name:'처리 순서의 근거',comp:'C4',field:'order',lv:['순서만 있고 이유가 없다','마감·영향도로 순서를 설명한다','고객 메일처럼 짧게 끝낼 일을 먼저 처리하는 등 시간 배분까지 설명한다']},
+    {key:'client',name:'고객 답장',comp:'C1',field:'r_client',lv:['사과나 날짜 없이 모호하다','누락을 인정하고 일정표를 보내거나 정확한 발송 시각을 알린다','2점 + 내부 보고에 필요한 내용을 되물어 확인한다']},
+    {key:'peer',name:'동료 답장',comp:'C3',field:'r_peer',lv:['방어하거나 상대를 탓한다','판단 근거를 설명하고 고객 대응을 함께 논의하자고 한다','2점 + 할인율 기준을 팀에서 정리하자고 제안한다']},
+    {key:'lead',name:'팀장 답장',comp:'C1',field:'r_lead',lv:['답장이 없거나 수락만 한다','마감을 확인하고 포함할 범위를 되묻는다','2점 + 임원 회의 목적에 맞춘 구성안을 먼저 제안한다']},
+  ]
+};
+
+const SAMPLE = {
+  sjt:{Q1:'D',Q2:'B',Q3:'D',Q4:'B',Q5:'C',Q6:'C'},
+  text:{order:'1) 고객사 메일: 일정표만 보내면 10분 안에 끝나고 오늘 내부 보고가 있어 먼저 처리\n2) 팀장 요약: 12시 마감, 임원 회의용이라 영향이 가장 큼\n3) 동료: 오늘 중 설명하되 오후로 미룸',
+        r_lead:'팀장님, 12시까지 고객 이탈 현황 요약 드리겠습니다. 최근 분기 기준으로 이탈 건수와 주요 사유 위주로 정리하려는데, 범위가 맞는지 확인 부탁드립니다.',
+        r_client:'담당자님, 일정표 전달이 늦어 죄송합니다. 오늘 오전 10시까지 메일로 보내드리겠습니다.',
+        r_peer:'항의가 있었다니 죄송해요. 그 할인율은 계약 규모 기준으로 정했는데, 오후에 고객 대응 방법을 같이 이야기해 볼까요?'},
+  rubric:{order:2,client:2,peer:2,lead:2}
+};
+
+/* state */
+const KEY = 'competency-site-v1';
+let state = {sjt:{},text:{},rubric:{},cur:0};
+try{ const s = JSON.parse(localStorage.getItem(KEY)||'null'); if(s) state = Object.assign(state,s); }catch(e){}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const compBy = c => COMPETENCIES.find(x => x.code === c);
+
+/* tabs */
+const TABS = ['model','test','report','design'];
+function show(tab){
+  if(!TABS.includes(tab)) tab = 'model';
+  document.querySelectorAll('[data-panel]').forEach(p => p.hidden = p.dataset.panel !== tab);
+  document.querySelectorAll('nav.tabs button').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === tab));
+  if(tab === 'test') renderTest();
+  if(tab === 'report') renderReport();
+  try{ history.replaceState(null,'','#'+tab); }catch(e){}
+  window.scrollTo({top:0});
+}
+document.querySelectorAll('nav.tabs button, [data-goto]').forEach(b =>
+  b.addEventListener('click', () => show(b.dataset.tab || b.dataset.goto)));
+
+/* model */
+$('#comp-grid').innerHTML = COMPETENCIES.map(c => `
+  <article class="comp">
+    <div class="comp-head"><span class="mono">${c.code}</span><h3>${c.name}</h3></div>
+    <p style="font-size:14px">${c.def}</p>
+    <dl><div><dt>NCS</dt><dd>${c.ncs}</dd></div><div><dt>O*NET</dt><dd>${c.onet}</dd></div></dl>
+  </article>`).join('');
+$('#ind-table').innerHTML = `<tr><th>역량</th><th>정의</th><th class="lv1">1 미흡</th><th class="lv2">2 기대 충족</th><th class="lv3">3 우수</th></tr>` +
+  COMPETENCIES.map(c => `<tr><td style="white-space:nowrap"><span class="mono" style="color:var(--accent);font-weight:600">${c.code}</span> ${c.name}</td><td>${c.def}</td>${c.lv.map(l=>`<td>${l}</td>`).join('')}</tr>`).join('');
+
+/* test */
+const STEPS = SJT.length + 1;
+function answeredText(){ return INBASKET.fields.some(([k]) => (state.text[k]||'').trim()); }
+function renderSheet(){
+  $('#sheet-rows').innerHTML = SJT.map((q,i) => `
+    <button class="sheet-row ${state.cur===i?'cur':''}" data-step="${i}" aria-label="문항 ${i+1}">
+      <span>${i+1}</span>
+      <span class="bubbles">${['A','B','C','D'].map(l=>`<span class="bub ${state.sjt[q.id]===l?'on':''}">${l}</span>`).join('')}</span>
+    </button>`).join('') + `
+    <button class="sheet-row ${state.cur===SJT.length?'cur':''}" data-step="${SJT.length}" aria-label="서술형 문항">
+      <span>7</span><span class="txt ${answeredText()?'on':''}">서술형 ${answeredText()?'작성함':'미작성'}</span>
+    </button>`;
+  const n = SJT.filter(q => state.sjt[q.id]).length;
+  $('#sheet-prog').textContent = `객관식 ${n}/${SJT.length} 응답`;
+  document.querySelectorAll('.sheet-row').forEach(b => b.onclick = () => { state.cur = +b.dataset.step; save(); renderTest(); });
+}
+function renderTest(){
+  renderSheet();
+  const i = Math.min(state.cur, STEPS-1);
+  let html;
+  if(i < SJT.length){
+    const q = SJT[i], c = compBy(q.comp);
+    html = `<article class="q">
+      <div class="q-meta"><span class="eyebrow">문항 ${i+1} / ${STEPS}</span><span class="chip">${c.code} ${c.name}</span></div>
+      <p class="scenario">${q.scenario}</p>
+      <p class="instr">가장 적절한 행동 1개를 고르시오.</p>
+      <div class="opts" role="radiogroup" aria-label="선택지">
+        ${q.opts.map(([l,t]) => `<button class="opt" role="radio" aria-checked="${state.sjt[q.id]===l}" data-l="${l}"><span class="bub">${l}</span><span>${t}</span></button>`).join('')}
+      </div>
+      ${navHtml(i)}
+    </article>`;
+  } else {
+    html = `<article class="q">
+      <div class="q-meta"><span class="eyebrow">문항 7 / ${STEPS} · 서술형 인바스켓</span><span class="chip">C1 · C3 · C4</span><span class="chip" style="background:var(--sunken);color:var(--ink-soft)">권장 20분</span></div>
+      <p class="scenario">${INBASKET.situation}</p>
+      <ul class="mails">${INBASKET.mails.map(([f,m],k)=>`<li class="mail"><span class="from">${k+1}. ${f}</span><span>${m}</span></li>`).join('')}</ul>
+      ${INBASKET.fields.map(([k,lab]) => `<label class="fl" for="ib-${k}">${lab}<textarea id="ib-${k}" data-k="${k}">${esc(state.text[k]||'')}</textarea></label>`).join('')}
+      ${navHtml(i)}
+    </article>`;
+  }
+  $('#q-host').innerHTML = html;
+  document.querySelectorAll('.opt').forEach(b => b.onclick = () => {
+    state.sjt[SJT[i].id] = b.dataset.l; save(); stamp(); renderTest();
+  });
+  document.querySelectorAll('textarea[data-k]').forEach(t => t.oninput = () => {
+    state.text[t.dataset.k] = t.value; save(); stamp(); renderSheet();
+  });
+  $('#q-prev') && ($('#q-prev').onclick = () => { state.cur = i-1; save(); renderTest(); });
+  $('#q-next') && ($('#q-next').onclick = () => { state.cur = i+1; save(); renderTest(); });
+}
+let lastSaved = null;
+function stamp(){ lastSaved = new Date(); const el = $('#saved-at'); if(el) el.textContent = savedText(); }
+function savedText(){ return lastSaved ? `${lastSaved.toTimeString().slice(0,8)} 저장됨` : '응답하면 자동 저장됩니다'; }
+function navHtml(i){
+  return `<div class="q-nav">
+    <button class="btn" id="q-prev" ${i===0?'disabled':''}>이전</button>
+    <span class="saved" id="saved-at">${savedText()}</span>
+    ${i < STEPS-1 ? `<button class="btn primary" id="q-next">다음</button>` : `<button class="btn primary" data-goto="report" onclick="show('report')">제출하고 리포트 보기</button>`}
+  </div>`;
+}
+$('#btn-submit').onclick = () => show('report');
+let resetArmed = false;
+$('#btn-reset').onclick = () => {
+  const msg = $('#reset-confirm');
+  if(!resetArmed){ resetArmed = true; msg.hidden = false; msg.textContent = '한 번 더 누르면 모든 답안과 채점이 지워집니다.'; $('#btn-reset').textContent = '지우기 확인'; return; }
+  state = {sjt:{},text:{},rubric:{},cur:0}; save(); resetArmed = false;
+  msg.hidden = true; $('#btn-reset').textContent = '답안 지우기'; lastSaved = null; renderTest();
+};
+
+/* report */
+function levelOf(pct){ return pct >= 90 ? 3 : pct >= 60 ? 2 : 1; }
+function renderReport(){
+  const hasOwn = Object.keys(state.sjt).length > 0 || answeredText();
+  const d = hasOwn ? state : SAMPLE;
+  $('#sample-flag').hidden = hasOwn;
+  const ibDone = hasOwn ? answeredText() : true;
+
+  const rows = COMPETENCIES.map(c => {
+    const ev = []; let got = 0, max = 0;
+    SJT.filter(q => q.comp === c.code).forEach(q => {
+      const sel = d.sjt[q.id]; max += 3;
+      if(sel){ const o = q.opts.find(o => o[0] === sel); got += o[2]; ev.push({src:`${q.id} · ${sel}`, text:o[3], pts:`${o[2]}/3`}); }
+      else ev.push({src:q.id, text:'응답 없음', pts:'0/3'});
+    });
+    if(ibDone) INBASKET.rubric.filter(r => r.comp === c.code).forEach(r => {
+      const s = d.rubric[r.key]; max += 3;
+      const answered = ((d.text||{})[r.field]||'').trim();
+      if(!answered){ ev.push({src:`Q7 · ${r.name}`, text:'해당 답안 없음', pts:'0/3'}); return; }
+      if(s == null){ ev.push({src:`Q7 · ${r.name}`, text:'평가자 채점 대기', pts:'–/3', pending:true}); return; }
+      got += s; ev.push({src:`Q7 · ${r.name}`, text:s ? r.lv[s-1] : '0점', pts:`${s}/3`});
+    });
+    const pending = ev.some(e => e.pending);
+    const pct = max ? Math.round(got / max * 100) : 0;
+    return {c, got, max, pct, lv: levelOf(pct), ev, pending};
+  });
+
+  $('#bars').innerHTML = rows.map(r => `
+    <div class="bar-row">
+      <span><span class="mono" style="color:var(--accent);font-weight:600">${r.c.code}</span> ${r.c.name}</span>
+      <div class="track" role="img" aria-label="${r.c.name} ${r.pct}점"><div class="fill" style="width:${r.pct}%"></div></div>
+      <span class="score">${r.pct}<span class="pill l${r.lv}">${LV_NAME[r.lv-1]}</span></span>
+    </div>`).join('') +
+    `<div class="axis"><span></span><div><span style="left:0">0</span><span style="left:33.33%">33</span><span style="left:66.67%">67</span><span style="left:100%">100</span></div><span></span></div>`;
+
+  $('#detail').innerHTML = rows.map(r => `
+    <article class="det">
+      <div class="det-head"><span class="mono">${r.c.code}</span><h3>${r.c.name}</h3>
+        <span class="pill l${r.lv}">${r.lv} ${LV_NAME[r.lv-1]}</span>
+        <span class="mono muted" style="font-size:12px;margin-left:auto">${r.got}/${r.max} · ${r.pct}점</span>
+        ${r.pending?'<span class="pill na">서술형 채점 대기</span>':''}</div>
+      <p class="indicator"><b>${LV_NAME[r.lv-1]} 수준 행동지표</b> · ${r.c.lv[r.lv-1]}</p>
+      <ul class="evidence">${r.ev.map(e => `<li><span class="src">${e.src}</span><span>${e.text}</span><span class="pts">${e.pts}</span></li>`).join('')}</ul>
+    </article>`).join('');
+
+  const host = $('#rubric-host');
+  if(!ibDone){
+    host.innerHTML = `<article class="det"><p class="muted">서술형 문항에 작성한 답안이 없어 인바스켓은 계산에서 뺐습니다.</p></article>`;
+    return;
+  }
+  host.innerHTML = INBASKET.rubric.map(r => {
+    const ans = ((d.text||{})[r.field]||'').trim();
+    const s = d.rubric[r.key];
+    return `<article class="det">
+      <div class="det-head"><h3>${r.name}</h3><span class="chip">${r.comp}</span>
+        <div class="rubric-score" style="margin-left:auto" role="group" aria-label="${r.name} 점수">
+          ${[0,1,2,3].map(n => `<button data-k="${r.key}" data-n="${n}" aria-pressed="${s===n}" ${hasOwn?'':'disabled'}>${n}</button>`).join('')}
+        </div></div>
+      <div class="answer-quote">${ans ? esc(ans) : '답안 없음 → 0점'}</div>
+      <div class="tbl"><table><tr><th>1점</th><th>2점</th><th>3점</th></tr><tr>${r.lv.map((l,k)=>`<td class="${s===k+1?'':'muted'}" style="${s===k+1?'font-weight:600':''}">${l}</td>`).join('')}</tr></table></div>
+    </article>`;
+  }).join('');
+  host.querySelectorAll('button[data-k]').forEach(b => b.onclick = () => {
+    state.rubric[b.dataset.k] = +b.dataset.n; save(); renderReport();
+  });
+}
+
+const start = (location.hash || '').slice(1);
+show(TABS.includes(start) ? start : 'model');
+</script>
+</body>
+</html>
